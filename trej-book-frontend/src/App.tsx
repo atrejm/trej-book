@@ -4,10 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavHeader from './components/navbar';
 
-interface IUser {
+export interface IUser {
   loggedIn: boolean,
   userId: number | null,
+  profileId?: number,
   jwToken: JsonWebKey | null,
+  firstname?: string,
+  lastname?: string,
+  username?: string
 }
 
 export const UserContext = createContext<IUser>({
@@ -20,7 +24,20 @@ function App() {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
 
-  
+  const userStr = sessionStorage.getItem("user");
+    
+  if(userStr){ 
+    console.log(JSON.parse(userStr))
+    const user = JSON.parse(userStr);
+    userContext.loggedIn = user.loggedIn;
+    userContext.loggedIn = user.loggedIn,
+    userContext.userId = user.userId,
+    userContext.profileId = user.profileId,
+    userContext.jwToken = user.jwToken,
+    userContext.firstname = user.firstname,
+    userContext.lastname = user.lastname,
+    userContext.username = user.username
+  }
 
   useEffect(() => {
     sessionStorage.setItem("API_URL", API_URL);
@@ -34,6 +51,8 @@ function App() {
 
     if(!userContext.loggedIn) {
       navigate('login');
+    } else {
+      navigate('../home')
     }
 
     getSomething();

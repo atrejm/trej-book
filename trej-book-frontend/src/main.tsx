@@ -8,6 +8,10 @@ import App from './App.tsx'
 import Login from './routes/login.tsx'
 import Homepage from './routes/homepage.tsx'
 import Register from './routes/register.tsx'
+import './styles.css'
+import Profile from './routes/profile.tsx'
+import NavHeader from './components/navbar.tsx'
+import Feed from './routes/feed.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,17 +19,32 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/login",
+        path: "login",
         element: <Login />
-      },
-      {
-        path: "home",
-        element: <Homepage />
       },
       {
         path: "register",
         element: <Register />
       }
+    ]
+  },
+  {
+    path: "home",
+    element: <Homepage />,
+    children: [
+      {
+        path: "",
+        element: <Feed />
+      },
+      {
+        path: "feed",
+        element: <Feed />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      
     ]
   }
 ])
@@ -33,6 +52,5 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
       <RouterProvider router={router} />
-
   </React.StrictMode>,
 )

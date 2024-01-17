@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import passport from "passport";
 
 const express = require("express");
 var router = express.Router();
@@ -9,7 +10,7 @@ const { getPostsFromUser, getPost, createPost, deletePost, updatePost } = requir
 
 router.get('/:profileid/', getPostsFromUser);
 
-router.post('/:profileid/', createPost)
+router.post('/:profileid/', passport.authenticate('jwt', {session: false}), createPost)
 
 router.get('/:profileid/posts/:postid', getPost);
 

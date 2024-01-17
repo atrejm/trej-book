@@ -1,4 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import { Model } from "mongoose";
+import { IUser } from "./models/User";
+import { JwtPayload } from "jsonwebtoken";
+import { DoneCallback } from "passport";
 
 var createError = require('http-errors');
 var express = require('express');
@@ -15,6 +19,26 @@ var profileRouter = require('./routes/profile.ts');
 
 
 require('dotenv').config();
+
+const UserModel: Model<IUser> = require('./models/User')
+var passport = require('passport')
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+var opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.SECRET_KEY
+}
+passport.use(new JwtStrategy(opts, async function(jwt_payload: JwtPayload, done: DoneCallback) {
+  const user = await UserModel.findById(jwt_payload.sub);
+
+  if(user) {
+    return done(null, user);
+  } else {
+    return done(null, false);
+  }
+}))
+
+
 // connect mongoose to MongoDB
 const mongoose = require('mongoose');
 mongoose.set("strictQuery", false);

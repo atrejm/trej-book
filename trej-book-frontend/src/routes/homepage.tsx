@@ -1,6 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import { useContext, useEffect } from "react";
+import { Row, Col } from "react-bootstrap";
+import Sidebar from "../components/sidebar";
+import NavHeader from "../components/navbar";
 
 export default function Homepage() {
     const userContext = useContext(UserContext);
@@ -13,6 +16,21 @@ export default function Homepage() {
     }, [userContext.loggedIn, navigate])
 
     return(
-        <h1>Loggin in and viewing homepage</h1>
+        <>
+            <NavHeader />
+            {userContext.loggedIn
+            ?
+            <Row style={{height: "100vh"}}>
+                <Col xs={4} className="bg-secondary p-0" style={{maxWidth:"256px"}}>
+                    <Sidebar />
+                </Col>
+                <Col>
+                    <Outlet />
+                </Col>
+            </Row>
+            :
+            <></>
+            }
+        </>
     )
 }
