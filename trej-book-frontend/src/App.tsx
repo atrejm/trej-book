@@ -37,7 +37,7 @@ function App() {
     }
 
     getSomething();
-  }, [])
+  }, [navigate, userContext.loggedIn])
   
 
   return (

@@ -10,6 +10,8 @@ import { RequestType, handleFriendUpdate } from './ProfileController';
 
 const UserModel: Model<IUser>= require('../models/User');
 const ProfileModel: Model<IProfile> = require('../models/Profile');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.getAllUsers= asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const users: Array<IUser> = await UserModel.find({});
@@ -182,5 +184,24 @@ exports.deleteUser = asyncHandler(async (req: Request, res: Response, next: Next
         res.json({success: `Delete user: ${user.username}`});
     } else {
         res.json({ error: new Error(`Couldn't delete user with id ${req.params.id}`)})
+    }
+})
+
+exports.login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const user = await UserModel.findOne({username: req.body.username});
+    console.log(req.body);
+    if(!user) {
+        res.json({error: "User not found"});
+    } else {
+        bcrypt.compare(req.body.password, user.password, (err, auth) => {
+            if (auth === true) {
+                const token = jwt.sign({sub: user._id}, process.env.SECRET_KEY)
+                res.json({
+                    token: token,
+                    user: user})
+            } else {
+                res.json({error: "Incorect password"});
+            }
+        })
     }
 })
