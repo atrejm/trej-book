@@ -29,12 +29,16 @@ var opts = {
   secretOrKey: process.env.SECRET_KEY
 }
 passport.use(new JwtStrategy(opts, async function(jwt_payload: JwtPayload, done: DoneCallback) {
-  const user = await UserModel.findById(jwt_payload.sub);
+  try {
+    const user = await UserModel.findById(jwt_payload.sub);
 
-  if(user) {
-    return done(null, user);
-  } else {
-    return done(null, false);
+    if(user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  } catch (error) {
+    return done(error, false); 
   }
 }))
 

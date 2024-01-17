@@ -11,7 +11,7 @@ const UserModel: Model<IUser>= require('../models/User');
 const ProfileModel: Model<IProfile> = require('../models/Profile');
 
 exports.getProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.id);
+    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.id).populate("user").populate("posts");
 
     res.json(profile);
 })

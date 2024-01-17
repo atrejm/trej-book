@@ -5,7 +5,7 @@ import { IProfile } from "./Profile";
 const mongoose = require('mongoose');
 
 // Document interface
-export interface IUser {
+export interface IUser extends Express.User {
     firstname: string;
     lastname: string;
     username: string;

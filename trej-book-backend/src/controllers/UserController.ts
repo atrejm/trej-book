@@ -81,9 +81,9 @@ exports.createUser = [
             let thumbnailURL: string | null;
             if(url) {
                 console.log(url);
-                thumbnailURL = null;
-            } else {
                 thumbnailURL = url;
+            } else {
+                thumbnailURL = null;
             }
             const profile: HydratedDocument<IProfile> = new ProfileModel({
                 user: user._id,

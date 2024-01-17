@@ -3,13 +3,22 @@ import { API_URL } from './config'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavHeader from './components/navbar';
+import { ProfileID } from './routes/profile';
 
 export type UserID = string;
+
+export interface ExpressValidationErrorResponse {
+  location: string;
+  msg: string;
+  path: string;
+  type: string;
+  value: string;
+}
 
 export interface IUser {
   loggedIn: boolean,
   userId: UserID | null,
-  profileId?: number,
+  profileId?: ProfileID,
   jwToken: JsonWebKey | null,
   firstname?: string,
   lastname?: string,

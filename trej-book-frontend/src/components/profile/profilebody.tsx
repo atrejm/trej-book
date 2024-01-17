@@ -66,7 +66,6 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
         getProfileData();
     }, [profileID, userContext.profileId])
 
-    console.log(profileData?.posts);
     return (
         <>
             { profileData ?
@@ -78,18 +77,23 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                             lastName={profileData?.lname}
                             bio={profileData?.bio} />
                     </Col>
-                    <Col className="bg-secondary">
+                    <Col >
                         {owner? 
-                            <Accordion>
-                                <Accordion.Header>Create new post</Accordion.Header>
-                                <Accordion.Body>
-                                    <NewPostForm />
+                            <Accordion style={{width:"80%"}}>
+                                <Accordion.Header>
+                                    <span 
+                                        style={{color:"lightcyan", textDecoration: "underline", textShadow: "lightcyan 1px 0 2px"}}>
+                                            Create new post
+                                    </span>
+                                </Accordion.Header>
+                                <Accordion.Body className="bg-secondary">
+                                    <NewPostForm posts={posts} setPosts={setPosts} />
                                 </Accordion.Body>
                             </Accordion>
                         :
                         <></>
                         }
-                        {posts.map((post) => <Post key={post._id} post={post} />)}
+                        {posts.map((post) => <Post key={post._id} post={post} posts={posts} setPosts={setPosts} />)}
                     </Col>
                 </Row>
             </>

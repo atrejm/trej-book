@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.3",
     "localforage": "^1.10.0",
     "luxon": "^3.4.4",
     "match-sorter": "^6.3.3",

@@ -25,7 +25,7 @@ exports.getPost = asyncHandler(async (req: Request, res: Response, next: NextFun
 exports.getPostsFromUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     console.log("getting posts from user", req.params)
     const user = await UserModel.findById(req.params.profileid);
-    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.profileid);
+    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.profileid).populate("posts");
     
     profile?
         res.json({ 
@@ -50,6 +50,7 @@ exports.createPost = [
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const result = validationResult(req);
         const hasErrors = !result.isEmpty();
+        console.log("Processing request with body:", req.body)
         
         if(hasErrors) {
             res.json({error: result.array()})
@@ -60,6 +61,11 @@ exports.createPost = [
             if(!user || !userProfile) {
                 res.json({error: "User not found"})
             } else {
+                //@ts-ignore
+                if(user.id !== req.user.id) {
+                    throw(new Error("Unauthorized"));
+                }
+
                 const post: HydratedDocument<IPost> = new PostModel({
                     author: user,
                     title: req.body.title,
