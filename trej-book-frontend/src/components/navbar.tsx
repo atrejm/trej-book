@@ -20,7 +20,7 @@ export default function NavHeader() {
             <Container>
                 <LinkContainer to={'../home'}>
                     <Navbar.Brand>
-                        Trej-book
+                        Trej-book {userContext.loggedIn? <small style={{color:"gray"}}>logged in as: {userContext.username}</small>: <></>}
                     </Navbar.Brand>
                 </LinkContainer>
                 {userContext.loggedIn

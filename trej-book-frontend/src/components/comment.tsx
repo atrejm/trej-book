@@ -1,4 +1,4 @@
-import { UserID } from "../routes/profile/profile"
+import { UserID } from "../App"
 
 export interface Comment {
     author: UserID,

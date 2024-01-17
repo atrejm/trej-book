@@ -4,9 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavHeader from './components/navbar';
 
+export type UserID = string;
+
 export interface IUser {
   loggedIn: boolean,
-  userId: number | null,
+  userId: UserID | null,
   profileId?: number,
   jwToken: JsonWebKey | null,
   firstname?: string,
