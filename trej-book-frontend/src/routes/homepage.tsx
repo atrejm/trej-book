@@ -11,7 +11,7 @@ export default function Homepage() {
 
     useEffect(() => {
         if(!userContext.loggedIn) {
-            navigate("login");
+            navigate("../login");
         }
     }, [userContext.loggedIn, navigate])
 

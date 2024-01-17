@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import { 
   createBrowserRouter,
@@ -9,7 +9,7 @@ import Login from './routes/login.tsx'
 import Homepage from './routes/homepage.tsx'
 import Register from './routes/register.tsx'
 import './styles.css'
-import Profile from './routes/profile.tsx'
+import Profile from './routes/profile/profile.tsx'
 import NavHeader from './components/navbar.tsx'
 import Feed from './routes/feed.tsx'
 

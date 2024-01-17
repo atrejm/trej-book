@@ -1,4 +1,4 @@
-import { UserID } from "../routes/profile"
+import { UserID } from "../routes/profile/profile"
 
 export interface Post{
     author: UserID,

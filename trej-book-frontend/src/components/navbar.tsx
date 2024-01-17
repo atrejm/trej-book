@@ -2,13 +2,16 @@ import { MouseEventHandler, useContext } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { UserContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 export default function NavHeader() {
     const userContext = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleLogout: MouseEventHandler<HTMLElement> = () => {
         userContext.loggedIn = false
         sessionStorage.removeItem("user");
+        navigate('..')
     } 
 
 
