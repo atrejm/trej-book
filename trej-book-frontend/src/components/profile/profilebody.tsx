@@ -2,18 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import Post, { IPost } from "./post";
 import { Accordion, Col, Row } from "react-bootstrap";
 import Header from "./header";
-import { UserContext, UserID } from "../../App";
+import { IUser, UserContext, UserID } from "../../App";
 import NewPostForm from "../forms/newPostForm";
 import { ProfileID } from "../../routes/profile";
 
-interface IProfile {
-    userID: UserID | null,
-    profileID: ProfileID | null,
+export interface IProfile {
+    user: IUser,
+    userID: UserID
+    profile: ProfileID,
     fname: string,
     lname: string,
     friends: Array<UserID>,
     bio: string,
-    profilePictureURL: string,
+    profilePicURL: string,
     posts: Array<IPost>
 }
 
@@ -47,24 +48,25 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             console.log(resJSON.posts);
 
             const profile: IProfile = {
+                user: resJSON.user,
                 userID: resJSON.user._id,
-                profileID: resJSON._id,
+                profile: resJSON._id,
                 fname: resJSON.user.firstname,
                 lname: resJSON.user.lastname,
                 bio: resJSON.bio,
                 friends: resJSON.friends,
-                profilePictureURL: resJSON.profilePicURL+"?s=200",
+                profilePicURL: resJSON.profilePicURL+"?s=200",
                 posts: resJSON.posts
             }
             setProfileData(profile);
             setPosts(resJSON.posts);
-            if(userContext.profileId === resJSON._id) {
+            if(userContext.profile === resJSON._id) {
                 setOwner(true);
             }
         }
 
         getProfileData();
-    }, [profileID, userContext.profileId])
+    }, [profileID, userContext.profile])
 
     return (
         <>
@@ -72,7 +74,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             <>
                 <Row>
                     <Col xs={2}>
-                        <Header profilePicURL={profileData?.profilePictureURL}
+                        <Header profilePicURL={profileData?.profilePicURL}
                             firstName={profileData?.fname}
                             lastName={profileData?.lname}
                             bio={profileData?.bio} />

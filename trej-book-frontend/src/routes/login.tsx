@@ -42,7 +42,7 @@ export default function Login() {
             // User authenticated
             userContext.jwToken = resJSON.token;
             userContext.userId = resJSON.user._id;
-            userContext.profileId = resJSON.user.profile;
+            userContext.profile = resJSON.user.profile;
             userContext.loggedIn = true;
             userContext.firstname = resJSON.user.firstname;
             userContext.lastname = resJSON.user.lastname;

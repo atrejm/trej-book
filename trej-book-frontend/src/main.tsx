@@ -11,6 +11,7 @@ import Register from './routes/register.tsx'
 import './styles.css'
 import Profile from './routes/profile.tsx'
 import Feed from './routes/feed.tsx'
+import UsersList from './routes/userslist.tsx'
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,10 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile />
       },
-      
+      {
+        path: "usersList",
+        element: <UsersList />
+      }
     ]
   }
 ])

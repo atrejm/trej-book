@@ -18,7 +18,7 @@ export interface ExpressValidationErrorResponse {
 export interface IUser {
   loggedIn: boolean,
   userId: UserID | null,
-  profileId?: ProfileID,
+  profile?: ProfileID,
   jwToken: JsonWebKey | null,
   firstname?: string,
   lastname?: string,
@@ -43,7 +43,7 @@ function App() {
     userContext.loggedIn = user.loggedIn;
     userContext.loggedIn = user.loggedIn,
     userContext.userId = user.userId,
-    userContext.profileId = user.profileId,
+    userContext.profile = user.profileId,
     userContext.jwToken = user.jwToken,
     userContext.firstname = user.firstname,
     userContext.lastname = user.lastname,

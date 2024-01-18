@@ -1,7 +1,8 @@
-import { ExpressValidationErrorResponse } from "../App";
+import { ExpressValidationErrorResponse, IUser } from "../App";
 import { IPost } from "../components/profile/post";
+import { IProfile } from "../components/profile/profilebody";
 
-type IRequest = Record<string, string>;
+type IRequest = Record<string, string> | null | string;
 
 interface CreatePostResponse {
   error?: Array<ExpressValidationErrorResponse>;
@@ -10,6 +11,10 @@ interface CreatePostResponse {
 
 interface DeletePostResponse {
   deleted: IPost | null;
+}
+
+interface GetUserResponse {
+    users: Array<IUser>;
 }
 
 enum RequestMethod {
@@ -25,16 +30,27 @@ async function request(
   body: IRequest = {},
   jwt: JsonWebKey | null
 ) {
-  console.log(JSON.stringify(body));
-  const res = await fetch(url, {
-    method: requestType,
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
-    body: JSON.stringify(body),
-  });
+  let res;
+  if(requestType === RequestMethod.GET) {
+    res = await fetch(url, {
+        method: requestType,
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        }
+      });
+  } else {
+    res = await fetch(url, {
+        method: requestType,
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(body),
+      });
+  }
 
   if (!res.ok) {
     console.error(res);
@@ -66,4 +82,20 @@ export async function deletePost(
   const response: DeletePostResponse = await request(RequestMethod.DELETE, url, body, jwt);
 
   return response;
+}
+
+export async function getUsers(
+    url: string,
+): Promise<GetUserResponse> {
+    
+    const users = await request(RequestMethod.GET, url, {}, null);
+    return users;
+}
+
+export async function getProfile(
+    url: string,
+): Promise<IProfile> {
+    console.log(url);
+    const profile = await request(RequestMethod.GET, url, {}, null);
+    return profile;
 }

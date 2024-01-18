@@ -14,7 +14,7 @@ export default function NewPostForm({posts, setPosts}:{posts:Array<IPost>, setPo
     const [errors, setErrors] = useState<FieldErrors>({});
 
     const handleFormInput = async () => {
-        const url = sessionStorage.getItem("API_URL") + "posts/" + userContext.profileId;
+        const url = sessionStorage.getItem("API_URL") + "posts/" + userContext.profile;
         const response = await createPost(
             url, 
             {title: title, content: content},
@@ -24,8 +24,6 @@ export default function NewPostForm({posts, setPosts}:{posts:Array<IPost>, setPo
             const newPosts = [...posts, response.created];
             setPosts(newPosts);
             setTitle("");
-            setContent("");
-            setErrors({});
             console.log(response);
         } else if (response.error) {
             const errors: FieldErrors = {};

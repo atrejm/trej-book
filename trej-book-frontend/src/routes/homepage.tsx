@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import { useContext, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import Sidebar from "../components/sidebar";
+import Sidebar from "../components/sidebar/sidebar";
 import NavHeader from "../components/navbar";
 
 export default function Homepage() {
