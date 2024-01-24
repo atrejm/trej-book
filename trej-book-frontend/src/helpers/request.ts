@@ -2,7 +2,8 @@ import { ExpressValidationErrorResponse, IUser } from "../App";
 import { IPost } from "../components/profile/post";
 import { IProfile } from "../components/profile/profilebody";
 
-type IRequest = Record<string, string> | null | string;
+type IRequest = Record<string, string | object> | null | string;
+type IResponse = Record<string, string | object>
 
 interface CreatePostResponse {
   error?: Array<ExpressValidationErrorResponse>;
@@ -17,7 +18,19 @@ interface GetUserResponse {
     users: Array<IUser>;
 }
 
-enum RequestMethod {
+interface StatusResponse {
+    success?: IResponse;
+    error?: IResponse;
+}
+
+interface FriendUpdateResponse {
+    friendStatus: object
+    updatedProfile: {
+        user: IUser
+    }
+}
+
+export enum RequestMethod {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
@@ -98,4 +111,35 @@ export async function getProfile(
     console.log(url);
     const profile = await request(RequestMethod.GET, url, {}, null);
     return profile;
+}
+
+export async function updateProfile(
+    url: string,
+    body: IRequest,
+    jwt: JsonWebKey | null
+) : Promise<StatusResponse > {
+
+    const response: IResponse = await request(RequestMethod.PUT, url, body, jwt);
+
+    return response;
+}
+
+export async function addFriend(
+    url: string,
+    body: IRequest,
+    jwt: JsonWebKey | null
+) : Promise< FriendUpdateResponse> {
+
+    const response: FriendUpdateResponse = await request(RequestMethod.PUT, url, body, jwt);
+
+    return response;
+}
+
+export async function getFriendsList(
+    url: string,
+    jwt: JsonWebKey | null
+) : Promise<Array<IUser>> {
+
+    const friends = await request(RequestMethod.GET, url, {}, jwt);
+    return friends;
 }

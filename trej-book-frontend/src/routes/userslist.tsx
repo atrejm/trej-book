@@ -23,7 +23,7 @@ export default function UsersList() {
             <h1>List of Users</h1>
             {allUsers?.map((user) => (
                 <div>
-                    <MiniProfile profileId={user.profile}/>
+                    <MiniProfile user={user}/>
                 </div>
                 ))}
         </div>

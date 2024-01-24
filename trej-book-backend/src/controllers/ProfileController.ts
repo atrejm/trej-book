@@ -16,6 +16,12 @@ exports.getProfile = asyncHandler(async (req: Request, res: Response, next: Next
     res.json(profile);
 })
 
+exports.getFriendsFromProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.id).populate("friends").limit(15); 
+    console.log("correct routing")
+    res.json(profile?.friends);
+})
+
 exports.updateProfile = [
     body("bio")
         .optional()
@@ -54,7 +60,7 @@ exports.updateProfile = [
             if(profile) {
                 delete fields.friend;
                 const updatedProfile: UpdateWriteOpResult = await ProfileModel.updateOne({_id: profile._id}, fields);
-                updatedProfile ? response.updatedProfile = await ProfileModel.findById(profile._id) : null;
+                updatedProfile ? response.updatedProfile = await ProfileModel.findById(profile._id).populate("user") : null;
             }
             
             res.json(response)

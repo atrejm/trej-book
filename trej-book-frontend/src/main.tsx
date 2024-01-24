@@ -25,35 +25,36 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />
+      },
+      {
+        path: "home",
+        element: <Homepage />,
+        children: [
+          {
+            path: "",
+            element: <Feed />
+          },
+          {
+            path: "feed",
+            element: <Feed />
+          },
+          {
+            path: "profile",
+            element: <Profile />
+          },
+          {
+            path: "usersList",
+            element: <UsersList />
+          }
+        ]
       }
     ]
   },
-  {
-    path: "home",
-    element: <Homepage />,
-    children: [
-      {
-        path: "",
-        element: <Feed />
-      },
-      {
-        path: "feed",
-        element: <Feed />
-      },
-      {
-        path: "profile",
-        element: <Profile />
-      },
-      {
-        path: "usersList",
-        element: <UsersList />
-      }
-    ]
-  }
+  
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
 )

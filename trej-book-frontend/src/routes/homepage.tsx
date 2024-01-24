@@ -3,7 +3,6 @@ import { UserContext } from "../App";
 import { useContext, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import Sidebar from "../components/sidebar/sidebar";
-import NavHeader from "../components/navbar";
 
 export default function Homepage() {
     const userContext = useContext(UserContext);
@@ -17,20 +16,21 @@ export default function Homepage() {
 
     return(
         <>
-            <NavHeader />
-            {userContext.loggedIn
-            ?
-            <Row style={{height: "100vh"}}>
-                <Col xs={4} className="bg-secondary p-0" style={{maxWidth:"256px"}}>
-                    <Sidebar />
-                </Col>
-                <Col>
-                    <Outlet />
-                </Col>
-            </Row>
-            :
-            <></>
-            }
+            <UserContext.Provider value={userContext}>
+                {userContext.loggedIn
+                ?
+                <Row style={{height: "100vh"}}>
+                    <Col xs={4} className="bg-secondary p-0" style={{maxWidth:"256px"}}>
+                        <Sidebar />
+                    </Col>
+                    <Col>
+                        <Outlet />
+                    </Col>
+                </Row>
+                :
+                <></>
+                }
+            </UserContext.Provider>
         </>
     )
 }

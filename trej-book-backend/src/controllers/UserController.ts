@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.getAllUsers= asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const users: Array<IUser> = await UserModel.find({});
+    const users: Array<IUser> = await UserModel.find({}).populate("profile");
 
     res.json({ users: users });
 })
@@ -188,8 +188,9 @@ exports.deleteUser = asyncHandler(async (req: Request, res: Response, next: Next
 })
 
 exports.login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const user = await UserModel.findOne({username: req.body.username});
     console.log(req.body);
+    const user = await UserModel.findOne({username: req.body.username}).populate("profile");
+    
     if(!user) {
         res.json({error: "User not found"});
     } else {

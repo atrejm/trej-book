@@ -35,14 +35,15 @@ export default function Login() {
         console.log(res);
         const resJSON = await res.json();
         
-        console.log(res);
         if (resJSON.error) {
             setFieldErrors(resJSON.error);
         } else {
             // User authenticated
+            console.log("logging in and writing: ", resJSON)
             userContext.jwToken = resJSON.token;
             userContext.userId = resJSON.user._id;
-            userContext.profile = resJSON.user.profile;
+            userContext.profile = resJSON.user.profile._id;
+            userContext.friends = resJSON.user.profile.friends;
             userContext.loggedIn = true;
             userContext.firstname = resJSON.user.firstname;
             userContext.lastname = resJSON.user.lastname;
