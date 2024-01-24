@@ -20,7 +20,7 @@ exports.getAllUsers= asyncHandler(async (req: Request, res: Response, next: Next
 })
 
 exports.getUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const user: IUser | null= await UserModel.findById(req.params.id);
+    const user: IUser | null= await UserModel.findById(req.params.id).populate("profile");
 
     if (user) {
         res.json({ user: user });
@@ -197,6 +197,7 @@ exports.login = asyncHandler(async (req: Request, res: Response, next: NextFunct
         bcrypt.compare(req.body.password, user.password, (err, auth) => {
             if (auth === true) {
                 const token = jwt.sign({sub: user._id}, process.env.SECRET_KEY)
+                console.log("Getting user: ", user);
                 res.json({
                     token: token,
                     user: user})

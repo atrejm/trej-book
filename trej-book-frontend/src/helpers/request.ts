@@ -14,10 +14,6 @@ interface DeletePostResponse {
   deleted: IPost | null;
 }
 
-interface GetUserResponse {
-    users: Array<IUser>;
-}
-
 interface StatusResponse {
     success?: IResponse;
     error?: IResponse;
@@ -142,4 +138,38 @@ export async function getFriendsList(
 
     const friends = await request(RequestMethod.GET, url, {}, jwt);
     return friends;
+}
+
+type GetUserResponse = {
+    user?: IUser,
+    error?: string
+}
+
+export async function getFullyHydratedUserData(
+    url: string,
+    jwt: JsonWebKey | null
+) : Promise<GetUserResponse> {
+    const user = await request(RequestMethod.GET, url, {}, jwt);
+    return user;
+}
+
+type loginPayload = {
+    username: string,
+    password: string
+}
+
+type LoginResponse = {
+    token?: JsonWebKey
+    user?: IUser
+    error?: string
+}
+
+export async function login(
+    url: string,
+    jwt: JsonWebKey | null,
+    login: loginPayload
+) : Promise< LoginResponse> {
+    const user = await request(RequestMethod.POST, url, login, jwt);
+
+    return user;
 }

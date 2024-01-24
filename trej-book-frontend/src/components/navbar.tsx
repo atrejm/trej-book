@@ -5,12 +5,13 @@ import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 
 export default function NavHeader() {
-    const userContext = useContext(UserContext);
+    //const userContext = useContext(UserContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
     const navigate = useNavigate();
 
     const handleLogout: MouseEventHandler<HTMLElement> = () => {
-        userContext.loggedIn = false
         sessionStorage.removeItem("user");
+        setCurrentUser(null);
         navigate('..')
     } 
 
@@ -20,10 +21,10 @@ export default function NavHeader() {
             <Container>
                 <LinkContainer to={'../home'}>
                     <Navbar.Brand>
-                        Trej-book {userContext.loggedIn? <small style={{color:"gray"}}>logged in as: {userContext.username}</small>: <></>}
+                        Trej-book {currentUser?.loggedIn? <small style={{color:"gray"}}>logged in as: {currentUser?.username}</small>: <></>}
                     </Navbar.Brand>
                 </LinkContainer>
-                {userContext.loggedIn
+                {currentUser?.loggedIn
                 ?
                 <Nav.Link onClick={handleLogout}>
                     Logout

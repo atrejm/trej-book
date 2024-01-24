@@ -25,65 +25,43 @@ export interface IUser {
   lastname?: string,
   username?: string,
   friends?: Array<UserID>,
-  setFriends?: any,
 }
 
-export const UserContext = createContext<IUser>({
-  loggedIn: false,
-  userId: null,
-  jwToken: null,
-  friends: [],
-  setFriends: (friends: Array<IUser>) => {}
-})
+export const UserContext = createContext(null)
 
 function App() {
-  const userContext = useContext(UserContext);
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   
   const navigate = useNavigate();
 
-  const userStr = sessionStorage.getItem("user");
-    
-  let user;
-  if(userStr){ 
-    console.log(JSON.parse(userStr))
-    user = JSON.parse(userStr);
-    userContext.loggedIn = user.loggedIn;
-    userContext.loggedIn = user.loggedIn,
-    userContext.userId = user.userId,
-    userContext.profile = user.profile,
-    userContext.jwToken = user.jwToken,
-    userContext.firstname = user.firstname,
-    userContext.lastname = user.lastname,
-    userContext.username = user.username,
-    userContext.friends = user.friends
-  }
-
-  const [userState, setUserState] = useState(user);
+ 
+  
+  
 
   useEffect(() => {
     sessionStorage.setItem("API_URL", API_URL);
+    const userStr = sessionStorage.getItem("user");
 
-    async function getSomething() {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-
-      console.log(data);
+    if(!currentUser && userStr){ 
+      console.log("Data from storage: ", JSON.parse(userStr))
+      const user = JSON.parse(userStr);
+      setCurrentUser(user);
+      navigate("feed")
     }
 
-    if(!userContext.loggedIn) {
+    if(!currentUser) {
       navigate('login');
     } else {
       navigate('../home')
     }
 
-    getSomething();
-  }, [navigate, userContext.loggedIn])
+  }, [currentUser])
   
 
   return (
     <>
-      <NavHeader />
-      <UserContext.Provider value={userState}>
+      <UserContext.Provider value={{currentUser, setCurrentUser}}>
+        <NavHeader />
         <Outlet />
       </UserContext.Provider>
     </>

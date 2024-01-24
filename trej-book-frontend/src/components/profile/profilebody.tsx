@@ -5,7 +5,7 @@ import Header from "./header";
 import { IUser, UserID } from "../../App";
 import NewPostForm from "../forms/newPostForm";
 import { ProfileID } from "../../routes/profile";
-import { RequestMethod, addFriend } from "../../helpers/request";
+import { RequestMethod, addFriend, getFullyHydratedUserData } from "../../helpers/request";
 import { UserContext } from '../../App';
 
 export interface IProfile {
@@ -21,12 +21,11 @@ export interface IProfile {
 }
 
 export default function ProfileBody({ profileID }: { profileID: ProfileID | undefined }) {
-    const userContext = useContext(UserContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
     const [profileData, setProfileData] = useState<IProfile | null>(null);
     const [alreadyFriends, setAlreadyFriends] = useState<boolean>(false);
     const [posts, setPosts] = useState<Array<IPost>>([]);
     const [owner, setOwner] = useState<boolean>(false);
-    console.log(`userContext.friends at render: ${userContext.friends}`)
 
     useEffect(()=> {
         const getProfileData = async () => {
@@ -49,8 +48,6 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             }
             const resJSON = await res.json();
 
-            console.log(resJSON.posts);
-
             let picURL;
             if(!resJSON.profilePicURL)
                 picURL = "../../public/chuck.jpg"
@@ -70,19 +67,20 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             }
             setProfileData(profile);
             setPosts(resJSON.posts);
-            userContext.profile === resJSON._id ? setOwner(true) : setOwner(false);
-            if(userContext.friends?.includes(profile.userID)) {
-                
+            currentUser.profile._id === resJSON._id ? setOwner(true) : setOwner(false);
+            console.log("current friends: ", currentUser.profile.friends, "current profileID: ", profileID)
+            if(currentUser.profile.friends.includes(profile.userID)) {
                 setAlreadyFriends(true);
+            } else {
+                setAlreadyFriends(false);
             }
-
         }
 
         getProfileData();
-    }, [profileID, userContext])
+    }, [profileID, currentUser])
 
     const handleFriendUpdate = async (e, requestType: string) => {
-        const url = sessionStorage.getItem("API_URL") + `profile/${userContext.profile}`
+        const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile._id}`
         if(!profileData)
             return;
         const reqBody = {
@@ -91,11 +89,17 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                 id: profileData?.userID
             }
         }
-        await addFriend(url, reqBody, userContext.jwToken);
-        //@ts-expect-error userContext.friends will never be empty here despite what ts claims
-        userContext.friends = [...userContext.friends, profileData.profileID]
-        sessionStorage.setItem("user", JSON.stringify(userContext));
-
+        await addFriend(url, reqBody, currentUser.jwToken);
+        const response = await getFullyHydratedUserData(sessionStorage.getItem("API_URL") + `users/${currentUser._id}`, currentUser.jwToken)
+        if(response.error) {
+            console.error(response.error)
+        } else if (response.user) {
+            console.log("Updating current userstate with", response.user)
+            response.user.loggedIn = true;
+            setCurrentUser(response.user);
+            sessionStorage.setItem("user", JSON.stringify(response.user));
+        }
+        
         switch (requestType) {
             case "add":
                 setAlreadyFriends(true);
@@ -108,8 +112,6 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             default:
                 break;
         }
-        
-        
     }
 
     return (

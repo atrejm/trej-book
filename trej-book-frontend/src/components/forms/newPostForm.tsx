@@ -8,17 +8,17 @@ type FieldErrors = Record<string, string>
 
 export default function NewPostForm({posts, setPosts}:{posts:Array<IPost>, setPosts: Dispatch<SetStateAction<Array<IPost>>>}) {
 
-    const userContext = useContext(UserContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [errors, setErrors] = useState<FieldErrors>({});
 
     const handleFormInput = async () => {
-        const url = sessionStorage.getItem("API_URL") + "posts/" + userContext.profile;
+        const url = sessionStorage.getItem("API_URL") + "posts/" + currentUser.profile._id;
         const response = await createPost(
             url, 
             {title: title, content: content},
-            userContext.jwToken);
+            currentUser.jwToken);
         
         if(response.created) {
             const newPosts = [...posts, response.created];

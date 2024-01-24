@@ -9,15 +9,14 @@ import { LinkContainer } from "react-router-bootstrap";
 export const FriendsListContext = createContext<Array<IUser>>([])
 
 export default function Friends() {
-    const userContext = useContext(UserContext);
-    const [userState, setUserState] = useState<IUser>(userContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
     const [friends, setFriends] = useState<Array<IUser>>([]);
 
     useEffect(() => {
             console.log("getting friend data")
             async function fetchData() {
-            const url = sessionStorage.getItem("API_URL") + `profile/${userContext.profile}/friends`
-            const friendList = await getFriendsList(url, userContext.jwToken);
+            const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile._id}/friends`
+            const friendList = await getFriendsList(url, currentUser.jwToken);
             
             console.log("friends list: ", friendList);
             friendList.forEach((friend) => {
@@ -26,14 +25,14 @@ export default function Friends() {
 
                 console.log("adding friend");
                 //@ts-expect-error pls shutp
-                userContext.friends.push(friend._id);
-            })
+                currentUser.profile.friends.push(friend._id);
+            }) 
 
             setFriends(friendList);
         }
 
         fetchData()
-    }, [userContext])
+    }, [currentUser, setCurrentUser])
 
     return(
         <>

@@ -4,6 +4,8 @@ import Form from 'react-bootstrap/Form'
 import { LinkContainer } from "react-router-bootstrap";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import { login } from "../helpers/request";
+import _ from 'lodash'
 
 export default function Login() {
     const [username, setUsername] = useState<string>("");
@@ -11,44 +13,29 @@ export default function Login() {
     const [fieldErrors, setFieldErrors] = useState<string | null>(null)
 
     const navigate = useNavigate();
-    const userContext = useContext(UserContext);
+    // const currentUser = useContext(UserContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
+    
 
     const handleLogin: FormEventHandler = async (e) => {
         e.preventDefault();
         const url: string | null = sessionStorage.getItem("API_URL") + "users/login";
 
-        if(!url) {
-            throw new Error("Invalid API key")
-        }
-
-        const res = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username:username, 
-                password:password
-            })
-        });
-        console.log(res);
-        const resJSON = await res.json();
+        const response = await login(url, currentUser?.jwToken, {username, password})
         
-        if (resJSON.error) {
-            setFieldErrors(resJSON.error);
-        } else {
+        console.log(response);
+
+        if (response.error) {
+            setFieldErrors(response.error);
+        } else if (response.user && response.token) {
             // User authenticated
-            console.log("logging in and writing: ", resJSON)
-            userContext.jwToken = resJSON.token;
-            userContext.userId = resJSON.user._id;
-            userContext.profile = resJSON.user.profile._id;
-            userContext.friends = resJSON.user.profile.friends;
-            userContext.loggedIn = true;
-            userContext.firstname = resJSON.user.firstname;
-            userContext.lastname = resJSON.user.lastname;
-            userContext.username = resJSON.user.username;
-            sessionStorage.setItem("user", JSON.stringify(userContext));
+            console.log("logging in and writing: ", response)
+            const user = response.user;
+            
+            user.jwToken = response.token;
+            user.loggedIn = true;
+            setCurrentUser(user);
+            sessionStorage.setItem("user", JSON.stringify(user));
             navigate('../home');
         }
     }
