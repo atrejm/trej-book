@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Card, Col, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { IUser } from "../../App";
 
-export default function MiniProfile({user}: {user: any | undefined}) {
+export default function MiniProfile({user}: {user: IUser}) {
     const [profilePic, setProfilePic] = useState<string>()
 
     useEffect(() => {
@@ -11,24 +12,7 @@ export default function MiniProfile({user}: {user: any | undefined}) {
         else
             setProfilePic(user.profile.profilePicURL)
     },[])
-    
 
-    // useEffect(()=>{
-        
-    //     async function fetchProfile() {
-    //         console.log("searching for profile");
-    //         const url = sessionStorage.getItem('API_URL') + `profile/${profile}`
-    //         const response = await getProfile(url)
-    //         if(!response.profilePicURL)
-    //             response.profilePicURL = "../../public/chuck.jpg";
-    //         setProfile(response);
-    //         console.log(response);
-
-            
-    //     }
-
-    //     fetchProfile()
-    // }, [profileId])
 
     return (
         <>
@@ -39,7 +23,7 @@ export default function MiniProfile({user}: {user: any | undefined}) {
                 </Col>
                 <Col xs={6}>
                     <h3>{user.firstname}</h3>
-                    <p>Bio: {user.profile.bio}</p>
+                    <p>Bio: {user.profile?.bio}</p>
                     <Link to={'../profile'} state={{ profileID: user.profile?._id}}><small>View Profile</small></Link>
                 </Col>
             </Row>

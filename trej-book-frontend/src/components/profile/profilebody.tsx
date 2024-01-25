@@ -5,16 +5,15 @@ import Header from "./header";
 import { IUser, UserID } from "../../App";
 import NewPostForm from "../forms/newPostForm";
 import { ProfileID } from "../../routes/profile";
-import { RequestMethod, addFriend, getFullyHydratedUserData } from "../../helpers/request";
+import { addFriend, getFullyHydratedUserData } from "../../helpers/request";
 import { UserContext } from '../../App';
 
 export interface IProfile {
+    _id: ProfileID
     user: IUser,
-    userID: UserID
+    userID: UserID,
     profileID: ProfileID,
-    fname: string,
-    lname: string,
-    friends: Array<IUser>,
+    friends: Array<UserID>,
     bio: string,
     profilePicURL: string,
     posts: Array<IPost>
@@ -55,11 +54,10 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                 picURL = resJSON.profilePicURL+"?s=200"
 
             const profile: IProfile = {
+                _id: resJSON._id,
                 user: resJSON.user,
                 userID: resJSON.user._id,
                 profileID: resJSON._id,
-                fname: resJSON.user.firstname,
-                lname: resJSON.user.lastname,
                 bio: resJSON.bio,
                 friends: resJSON.friends,
                 profilePicURL: picURL,
@@ -67,9 +65,9 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             }
             setProfileData(profile);
             setPosts(resJSON.posts);
-            currentUser.profile._id === resJSON._id ? setOwner(true) : setOwner(false);
-            console.log("current friends: ", currentUser.profile.friends, "current profileID: ", profileID)
-            if(currentUser.profile.friends.includes(profile.userID)) {
+            currentUser?.profile?._id === resJSON._id ? setOwner(true) : setOwner(false);
+
+            if(currentUser?.profile?.friends.includes(profile.userID)) {
                 setAlreadyFriends(true);
             } else {
                 setAlreadyFriends(false);
@@ -80,7 +78,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
     }, [profileID, currentUser])
 
     const handleFriendUpdate = async (e, requestType: string) => {
-        const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile._id}`
+        const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile?._id}`
         if(!profileData)
             return;
         const reqBody = {
@@ -96,6 +94,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
         } else if (response.user) {
             console.log("Updating current userstate with", response.user)
             response.user.loggedIn = true;
+            response.user.jwToken = currentUser.jwToken;
             setCurrentUser(response.user);
             sessionStorage.setItem("user", JSON.stringify(response.user));
         }
@@ -121,8 +120,8 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                 <Row>
                     <Col xs={2}>
                         <Header profilePicURL={profileData?.profilePicURL}
-                            firstName={profileData?.fname}
-                            lastName={profileData?.lname}
+                            firstName={profileData?.user.firstname}
+                            lastName={profileData?.user.lastname}
                             bio={profileData?.bio} />
                         {!owner? 
                         !alreadyFriends? 

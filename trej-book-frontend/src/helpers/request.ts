@@ -93,9 +93,14 @@ export async function deletePost(
   return response;
 }
 
+type GetUsersResponse = {
+    users?: Array<IUser>,
+    error?: string
+}
+
 export async function getUsers(
     url: string,
-): Promise<GetUserResponse> {
+): Promise<GetUsersResponse> {
     
     const users = await request(RequestMethod.GET, url, {}, null);
     return users;

@@ -30,13 +30,13 @@ export default function Post({
   areFriends: boolean;
   owner: boolean
 }) {
-  const userContext = useContext(UserContext);
+  const {currentUser, } = useContext(UserContext);
 
   const handleDeletePost: React.MouseEventHandler<
     HTMLButtonElement
   > = async () => {
     const url = sessionStorage.getItem("API_URL") + "posts/" + post._id;
-    const response = await deletePost(url, {}, userContext.jwToken);
+    const response = await deletePost(url, {}, currentUser.jwToken);
 
     const index = posts.findIndex((p) => p._id === post._id);
     posts.splice(index, 1);

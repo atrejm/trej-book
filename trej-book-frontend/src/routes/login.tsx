@@ -5,7 +5,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { login } from "../helpers/request";
-import _ from 'lodash'
 
 export default function Login() {
     const [username, setUsername] = useState<string>("");
@@ -35,6 +34,7 @@ export default function Login() {
             user.jwToken = response.token;
             user.loggedIn = true;
             setCurrentUser(user);
+            sessionStorage.setItem("token", JSON.stringify(user.jwToken));
             sessionStorage.setItem("user", JSON.stringify(user));
             navigate('../home');
         }

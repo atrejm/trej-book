@@ -5,7 +5,7 @@ import { UserContext } from '../../App';
 import Friends from "./friendslist";
 
 export default function Sidebar() {
-    const {currentUser, setCurrentUser} = useContext(UserContext);
+    const {currentUser,} = useContext(UserContext);
     
 
     return (
@@ -14,7 +14,7 @@ export default function Sidebar() {
                 <h5 className="text-center bg-secondary">Navigation</h5>
                 <ListGroup variant="flush" className="bg-primary">
                     
-                    <LinkContainer to={'profile'} state={{ profileID: currentUser?.profile._id}}>
+                    <LinkContainer to={'profile'} state={{ profileID: currentUser?.profile?._id}}>
                         <a className="list-group-item list-group-item-action">My Profile</a>
                     </LinkContainer>
                     <LinkContainer to={'feed'}>

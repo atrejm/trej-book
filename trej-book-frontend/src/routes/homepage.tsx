@@ -1,18 +1,19 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import Sidebar from "../components/sidebar/sidebar";
 
 export default function Homepage() {
-    const userContext = useContext(UserContext);
-    const {currentUser, setCurrentUser} = useContext(UserContext);
+    const {currentUser,} = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("State in homepage", currentUser)
-        if(!currentUser || !currentUser.loggedIn) {
+        if(!currentUser.loggedIn) {
             navigate("../login");
+        }
+        if(!currentUser) {
+            navigate("..");
         }
     }, [])
 

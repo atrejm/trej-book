@@ -11,8 +11,12 @@ export default function NavHeader() {
 
     const handleLogout: MouseEventHandler<HTMLElement> = () => {
         sessionStorage.removeItem("user");
-        setCurrentUser(null);
-        navigate('..')
+        setCurrentUser({
+            _id: null,
+            jwToken: null,
+            loggedIn: false,
+        });
+        navigate('../login')
     } 
 
 
