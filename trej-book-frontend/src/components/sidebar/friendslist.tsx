@@ -13,6 +13,7 @@ export default function Friends() {
     const [friends, setFriends] = useState<Array<IUser>>([]);
 
     useEffect(() => {
+            console.log("CurrentUserFriends", currentUser.profile?.friends)
             console.log("getting friend data")
             async function fetchData() {
             const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile?._id}/friends`
@@ -34,9 +35,8 @@ export default function Friends() {
             <ListGroup variant="flush" className="bg-primary">
                 {friends.map((friend) => (
                     <LinkContainer key={friend._id} to={"profile"} state={{ profileID: friend.profile}}>
-                        <a className="list-group-item list-group-item-action">{friend.firstname} {friend.lastname}</a>
+                            <a className="list-group-item list-group-item-action">{friend.firstname} {friend.lastname}</a>
                     </LinkContainer>
-                    
                 ))}
             </ListGroup>
             <Link to={"usersList"} className="text-center link-tertiary mb-2">Find Friends</Link>

@@ -28,13 +28,14 @@ const UserSchema :Schema = new Schema<IUser>({
 
 // This virtual returns the Hash required to get prfile data from Gravatar API:
 // https://docs.gravatar.com/profiles/json/ 
-UserSchema.virtual('thumbnailURL').get(async function(): Promise<string | Error> {
+UserSchema.virtual('thumbnailURL').get(async function(): Promise<string> {
     const hash = createHash('sha256');
     hash.update(this.email);
 
     const res = await fetch(`https://www.gravatar.com/${hash.digest('hex')}.json`);
     if(!res.ok) {
-        return (new Error("profile picture not found with associated email"));
+        console.error("profile picture not found with associated email");
+        return "";
     }
     const resJSON = await res.json();
 

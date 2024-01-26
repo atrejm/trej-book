@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Post, { IPost } from "./post";
-import { Accordion, Button, Col, Row } from "react-bootstrap";
+import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
 import Header from "./header";
 import { IUser, UserID } from "../../App";
 import NewPostForm from "../forms/newPostForm";
@@ -77,7 +77,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
         getProfileData();
     }, [profileID, currentUser])
 
-    const handleFriendUpdate = async (e, requestType: string) => {
+    const handleFriendUpdate = async (requestType: string) => {
         const url = sessionStorage.getItem("API_URL") + `profile/${currentUser.profile?._id}`
         if(!profileData)
             return;
@@ -118,21 +118,23 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
             { profileData ?
             <>
                 <Row>
-                    <Col xs={2}>
+                    <Col  xs={2}>
                         <Header profilePicURL={profileData?.profilePicURL}
                             firstName={profileData?.user.firstname}
                             lastName={profileData?.user.lastname}
                             bio={profileData?.bio} />
-                        {!owner? 
-                        !alreadyFriends? 
-                            <Button variant="light" type="button" onClick={(e) => {handleFriendUpdate(e, "add")}}>Add Friend</Button>
-                            :<Button variant="light" type="button" onClick={(e) => {handleFriendUpdate(e, "remove")}}>Remove Friend</Button>
-                        :<></>}
+                        <div className="text-center my-4">
+                        {!owner?
+                            !alreadyFriends? 
+                                <Button variant="light" type="button" onClick={() => {handleFriendUpdate("add")}}>Add Friend</Button>
+                                :<Button variant="light" type="button" onClick={() => {handleFriendUpdate("remove")}}>Remove Friend</Button>
+                            :<></>}
+                        </div>
                     </Col>
-                    <Col >
+                    <Col className="bg-secondary" style={{border:"solid black 1px", height:"100vh"}}>
                         {owner ? 
-                            <div>
-                                <Accordion style={{width:"80%"}}>
+                            <div >
+                                <Accordion>
                                     <Accordion.Header>
                                         <span 
                                             style={{color:"lightcyan", textDecoration: "underline", textShadow: "lightcyan 1px 0 2px"}}>
@@ -147,13 +149,17 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                         :
                         <></>
                         }
-                        {posts.map((post) => <Post 
-                                        key={post._id} 
-                                        post={post} 
-                                        posts={posts} 
-                                        setPosts={setPosts} 
-                                        areFriends={alreadyFriends}
-                                        owner={owner} />)}
+                        <h1>Posts</h1>
+                        <hr className="mb-4"></hr>
+                        <Container fluid className="bg-dark" >
+                            {posts.map((post) => <Post 
+                                            key={post._id} 
+                                            post={post} 
+                                            posts={posts} 
+                                            setPosts={setPosts} 
+                                            areFriends={alreadyFriends}
+                                            owner={owner} />)}
+                        </Container>
                     </Col>
                 </Row>
             </>

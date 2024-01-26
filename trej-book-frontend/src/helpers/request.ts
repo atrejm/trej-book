@@ -1,8 +1,11 @@
 import { ExpressValidationErrorResponse, IUser } from "../App";
-import { IPost } from "../components/profile/post";
+import { IComment } from "../components/forms/commentForm";
+import { IPost, PostID } from "../components/profile/post";
 import { IProfile } from "../components/profile/profilebody";
+import { UserCreationError } from "../routes/register";
 
-type IRequest = Record<string, string | object> | null | string;
+type PayloadRequest = Record<string, string | object>
+type IRequest = Record<string, string | undefined> | null | string;
 type IResponse = Record<string, string | object>
 
 interface CreatePostResponse {
@@ -36,7 +39,7 @@ export enum RequestMethod {
 async function request(
   requestType: RequestMethod,
   url: string,
-  body: IRequest = {},
+  body: IRequest | PayloadRequest,
   jwt: JsonWebKey | null
 ) {
   let res;
@@ -106,6 +109,20 @@ export async function getUsers(
     return users;
 }
 
+type CreateUserResponse = {
+  errors?: UserCreationError[],
+  success?: {user: IUser, profile: IProfile}
+}
+
+export async function createUser(
+    url: string,
+    body: IRequest
+): Promise<CreateUserResponse> {
+    const response = await request(RequestMethod.POST, url, body, null);
+
+    return response;
+}
+
 export async function getProfile(
     url: string,
 ): Promise<IProfile> {
@@ -127,7 +144,7 @@ export async function updateProfile(
 
 export async function addFriend(
     url: string,
-    body: IRequest,
+    body: PayloadRequest,
     jwt: JsonWebKey | null
 ) : Promise< FriendUpdateResponse> {
 
@@ -177,4 +194,50 @@ export async function login(
     const user = await request(RequestMethod.POST, url, login, jwt);
 
     return user;
+}
+
+interface CommentResponse {
+  postID: PostID,
+  comment: IComment,
+  updatedComments: Array<IComment>
+  error?: string
+}
+
+export async function leaveComment(
+  url: string,
+  jwt: JsonWebKey | null,
+  body: PayloadRequest
+) : Promise <CommentResponse> {
+  const response = await request(RequestMethod.POST, url, body, jwt);
+  
+  return response;
+}
+
+export async function getCommentsByPostID(
+  url: string,
+  jwt: JsonWebKey | null,
+) : Promise<Array<IComment>> {
+  
+  const response = await request(RequestMethod.GET, url, {}, jwt);
+
+  return response;
+}
+
+export async function deleteCommentByID(
+  url: string,
+  jwt: JsonWebKey | null,
+) : Promise<IComment> {
+  const commentDeleted: IComment = await request(RequestMethod.DELETE, url, {}, jwt)
+
+  return commentDeleted;
+}
+
+export async function getFeed(
+  url: string,
+  jwt: JsonWebKey | null
+) : Promise<IPost[]> {
+  
+  const posts: IPost[] = await request(RequestMethod.GET, url, {}, jwt)
+
+  return posts;
 }

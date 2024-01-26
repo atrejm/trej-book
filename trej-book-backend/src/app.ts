@@ -16,6 +16,7 @@ var postsRouter = require('./routes/posts.ts');
 var commentsRouter = require('./routes/comments.ts');
 var chatRouter = require('./routes/chat.ts');
 var profileRouter = require('./routes/profile.ts');
+var feedRouter = require('./routes/feed.ts');
 
 
 require('dotenv').config();
@@ -73,6 +74,7 @@ app.use('/api/chat', chatRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter);
+app.use('/api/feed', feedRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

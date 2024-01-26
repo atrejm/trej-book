@@ -43,7 +43,9 @@ exports.createUser = [
     body("username")
         .trim()
         .isAlphanumeric()
-        .withMessage("Only Alphanumberic characters allowed in username"),
+        .withMessage("Only Alphanumberic characters allowed in username")
+        .isLength({min: 5, max: 25})
+        .withMessage("Minimum user length is 5 characters"),
     
     body("password")
         .trim()
@@ -60,12 +62,19 @@ exports.createUser = [
         const hasErrors = !result.isEmpty();
         console.log(result);
 
+
         if(hasErrors) {
             const errors = result.array();
             res.json({errors: errors});
 
         } else {
+            console.log(req.body);
             const fields = req.body
+            const userAlreadyExists = await UserModel.findOne({username: fields.username});
+            if(userAlreadyExists) {
+                res.json({errors: [{msg: "User already exists"}]})
+                return;
+            }
             const bCryptedPass = await bcrypt.hash(fields.password, 10);
             const user: HydratedDocument<IUser>= new UserModel({
                 firstname: fields.firstname,
@@ -78,13 +87,14 @@ exports.createUser = [
             });
 
             const url = await user.thumbnailURL;
-            let thumbnailURL: string | null;
+            let thumbnailURL: string;
             if(url) {
                 console.log(url);
                 thumbnailURL = url;
             } else {
-                thumbnailURL = null;
+                thumbnailURL = "";
             }
+
             const profile: HydratedDocument<IProfile> = new ProfileModel({
                 user: user._id,
                 friends: [],

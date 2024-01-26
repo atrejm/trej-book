@@ -9,11 +9,25 @@ import { body, validationResult } from "express-validator";
 
 const UserModel: Model<IUser>= require('../models/User');
 const ProfileModel: Model<IProfile> = require('../models/Profile');
+const PostModel: Model<IPost> = require('../models/Post')
 
 exports.getProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.id).populate("user").populate("posts");
 
+    if(profile) {
+        const posts: HydratedDocument<IPost>[] | null = await PostModel
+            .find({author: profile.user})
+            .sort({dateposted: "descending"})
+
+        if(posts)
+            //@ts-expect-error
+            profile.posts = posts;
+    
     res.json(profile);
+    } else {
+        res.json({error: "profile not found"})
+    }
+
 })
 
 exports.getFriendsFromProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -62,7 +76,7 @@ exports.updateProfile = [
                 const updatedProfile: UpdateWriteOpResult = await ProfileModel.updateOne({_id: profile._id}, fields);
                 updatedProfile ? response.updatedProfile = await ProfileModel.findById(profile._id).populate("user") : null;
             }
-            
+            console.log(response);
             res.json(response)
         }
     })       
@@ -80,7 +94,8 @@ export interface FriendUpdate{
 
 export async function handleFriendUpdate(profile: HydratedDocument<IProfile>, request : FriendUpdate) {
     const friend: HydratedDocument<IUser> | null = await UserModel.findById(request.id).populate("profile");
-
+    console.log("Current friends list is: ", profile.friends)
+    console.log("Friend to delete is: ", friend?.firstname, friend?._id)
             if(!friend)
                 throw(new Error("User not found"))
             
@@ -92,7 +107,7 @@ export async function handleFriendUpdate(profile: HydratedDocument<IProfile>, re
     
     switch (request.requestType) {
         case RequestType.Add:
-            console.log(`${profile.user} adding ${friend.username}`)
+            console.log(`${profile._id} adding ${friend.username}`)
             const alreadyFriends: HydratedDocument<IUser> | null = await ProfileModel.findOne({_id:profile._id, friends: friend.id})
 
             if(alreadyFriends)
@@ -106,17 +121,18 @@ export async function handleFriendUpdate(profile: HydratedDocument<IProfile>, re
             return {success: [`Added friend: ${friend.username}`]}
         
         case RequestType.Remove:
-            console.log("removing friend")
+            console.log(profile._id, "removing friend:", friend.profile._id)
             // Check that the id is a valid friend
-            console.log(profile);
             const areFriends: HydratedDocument<IUser> | null = await ProfileModel.findOne({_id:profile._id, friends: friend.id});
 
             if(!areFriends)
                 //@ts-ignore
                 return {error: `${friend.username} isn't friends with ${profile.user.username}`}
             
-            const indexOfFriendToRemove = profile.friends.findIndex((user) => user === friend._id);
+            console.log("before splice: ", profile.friends);
+            const indexOfFriendToRemove = profile.friends.findIndex((user) => JSON.stringify(user) === JSON.stringify(friend._id));
             profile.friends.splice(indexOfFriendToRemove, 1);
+            console.log("after splice:", profile.friends);
             await profile.save();
             handleFriendUpdate(friendProfile, {requestType: RequestType.Remove, id: profile.user});
 

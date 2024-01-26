@@ -9,11 +9,10 @@ export default function Sidebar() {
     
 
     return (
-        <>
+        <div className="bg-tertiary">
             <div className="d-flex flex-column flex-shrink-0 mb-5">
-                <h5 className="text-center bg-secondary">Navigation</h5>
-                <ListGroup variant="flush" className="bg-primary">
-                    
+                <h5 className="text-center bg-tertiary">Navigation</h5>
+                <ListGroup variant="flush" className="bg-tertiary">
                     <LinkContainer to={'profile'} state={{ profileID: currentUser?.profile?._id}}>
                         <a className="list-group-item list-group-item-action">My Profile</a>
                     </LinkContainer>
@@ -25,6 +24,6 @@ export default function Sidebar() {
             <div className="d-flex flex-column flex-shrink-0 mb-5">
                 <Friends />
             </div>
-        </>
+        </div>
     )
 }

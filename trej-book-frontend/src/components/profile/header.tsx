@@ -12,9 +12,9 @@ export default function Header({profilePicURL, firstName, lastName, bio} : props
     return (
         <Card style={{width: '100%'}}>
             <Card.Img variant="top" src={profilePicURL} />
-            <Card.Body>
+            <Card.Body className="">
                 <Card.Title>
-                    {firstName} {lastName}
+                    <u><strong>{firstName} {lastName}</strong></u>
                 </Card.Title>
                 <Card.Text>
                     Bio: {bio}

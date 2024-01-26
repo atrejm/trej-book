@@ -25,12 +25,19 @@ exports.getPost = asyncHandler(async (req: Request, res: Response, next: NextFun
 exports.getPostsFromUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     console.log("getting posts from user", req.params)
     const user = await UserModel.findById(req.params.profileid);
-    const profile: HydratedDocument<IProfile> | null = await ProfileModel.findById(req.params.profileid).populate("posts");
+    // const profile: HydratedDocument<IProfile> | null = await ProfileModel
+    //     .findById(req.params.profileid)
+    //     .populate("posts")
+    //     .sort({dateposted: 'descending'});
+
+    const posts: HydratedDocument<IPost>[] | null = await PostModel
+        .find({author: user?.id})
+        .sort({dateposted: "descending"})
     
-    profile?
+    user?
         res.json({ 
-            user: profile.user,
-            posts: profile.posts 
+            user: user,
+            posts: posts 
         })
     :
         res.json({

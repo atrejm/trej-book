@@ -24,6 +24,7 @@ export default function NewPostForm({posts, setPosts}:{posts:Array<IPost>, setPo
             const newPosts = [...posts, response.created];
             setPosts(newPosts);
             setTitle("");
+            setContent("");
             console.log(response);
         } else if (response.error) {
             const errors: FieldErrors = {};
@@ -38,12 +39,12 @@ export default function NewPostForm({posts, setPosts}:{posts:Array<IPost>, setPo
         <Form>
             <Form.Group className="mb-3" controlId="postForm.ControlInput1">
                 <Form.Label>Title</Form.Label>
-                <Form.Control type="text" name="title" placeholder="title" onChange={(e) => setTitle(e.target.value)}/>
+                <Form.Control type="text" name="title" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
                 {errors.title? <p className="text-danger">{errors.title}</p>:<></>}
             </Form.Group>
             <Form.Group className="mb-3" controlId="postForm.ControlTextarea1">
                 <Form.Label>Content</Form.Label>
-                <Form.Control as="textarea" name="content" rows={3} onChange={(e) => setContent(e.target.value)}/>
+                <Form.Control as="textarea" name="content" rows={3} value={content} onChange={(e) => setContent(e.target.value)}/>
                 {errors.content? <p className="text-danger">{errors.content}</p>:<></>}
             </Form.Group>
             <Container>

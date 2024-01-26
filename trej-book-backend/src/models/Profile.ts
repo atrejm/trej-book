@@ -8,7 +8,7 @@ export interface IProfile {
     user: Types.ObjectId | IUser,
     bio: string,
     friends: [Types.ObjectId | IUser],
-    profilePicURL: string,
+    profilePicURL: string | null,
     posts: [Types.ObjectId | IPost]
 }
 

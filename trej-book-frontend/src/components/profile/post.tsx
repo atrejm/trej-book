@@ -1,20 +1,23 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import formatDate from "../../helpers/formatDate";
 import { UserID } from "../../App";
 import { Button } from "react-bootstrap";
-import { deletePost } from "../../helpers/request";
+import { deletePost, getCommentsByPostID } from "../../helpers/request";
 import { UserContext } from "../../App";
-import CommentForm from "./commentForm";
+import CommentForm, { CommentID, IComment } from "../forms/commentForm";
+import CommentList from "./commentList";
+
+export type PostID = string
 
 export interface IPost {
-  _id: string;
+  _id: PostID;
   author: UserID;
   title: string;
   content: string;
   dateposted: string;
   published: boolean;
   rating: number;
-  comments: Array<Comment>;
+  comments: Array<CommentID>;
 }
 
 export default function Post({
@@ -31,10 +34,20 @@ export default function Post({
   owner: boolean
 }) {
   const {currentUser, } = useContext(UserContext);
+  const [comments, setComments] = useState<Array<IComment>>();
 
-  const handleDeletePost: React.MouseEventHandler<
-    HTMLButtonElement
-  > = async () => {
+  useEffect(() => {
+    const getComments = async () => {
+        const url = sessionStorage.getItem("API_URL") + `comments/${post._id}`
+        const comments = await getCommentsByPostID(url, null);
+        
+        setComments(comments);
+    }
+
+      getComments();
+  }, [])
+
+  const handleDeletePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
     const url = sessionStorage.getItem("API_URL") + "posts/" + post._id;
     const response = await deletePost(url, {}, currentUser.jwToken);
 
@@ -55,7 +68,7 @@ export default function Post({
             variant="outline-danger mx-3"
             size="sm"
           >
-            <img src="\src\assets\x.svg"></img>
+            delete post
           </Button>
         ) : (
           <></>
@@ -63,11 +76,18 @@ export default function Post({
       </h1>
       <h5>{post.content}</h5>
       <p>{formatDate(post.dateposted)}</p>
-      {owner || alreadyFriends?
-        <CommentForm />
-        :
-        <></>
-        }
+      <div className="container card py-2">
+        <h5><u>Comments</u></h5>
+          <div className="container">
+            {comments?
+              <CommentList postID={post._id} comments={comments} setComments={setComments}></CommentList>:<></>
+            }
+            {(owner || alreadyFriends) && comments ?
+              <CommentForm post={post} comments={comments} setComments={setComments} />:<></>
+            }
+          </div>
+        
+      </div>
       <hr className="my-3"></hr>
     </>
   );
