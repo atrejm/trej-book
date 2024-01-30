@@ -4,7 +4,7 @@ import passport from "passport";
 const express = require("express");
 var router = express.Router();
 
-const { getPostsFromUser, getPost, createPost, deletePost, updatePost } = require('../controllers/PostController.ts')
+const { getPostsFromUser, getPost, createPost, deletePost, updatePost } = require('../controllers/PostController')
 
 /* GET home page. */
 

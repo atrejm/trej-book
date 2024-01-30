@@ -10,13 +10,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index.ts');
-var usersRouter = require('./routes/users.ts');
-var postsRouter = require('./routes/posts.ts');
-var commentsRouter = require('./routes/comments.ts');
-var chatRouter = require('./routes/chat.ts');
-var profileRouter = require('./routes/profile.ts');
-var feedRouter = require('./routes/feed.ts');
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var postsRouter = require('./routes/posts');
+var commentsRouter = require('./routes/comments');
+var chatRouter = require('./routes/chat');
+var profileRouter = require('./routes/profile');
+var feedRouter = require('./routes/feed');
 
 
 require('dotenv').config();
