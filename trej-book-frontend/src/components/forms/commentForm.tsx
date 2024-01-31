@@ -47,13 +47,18 @@ export default function CommentForm({post, comments, setComments}:IProps) {
     }  
 
     return (
-        <Form>
+        <Form onSubmit={(e) => {e.preventDefault()}}>
             <Form.Group className="mb-3">
                 <Form.Label>Leave a Comment</Form.Label>
                 <Form.Control type="text" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)}/>
             </Form.Group>
             <Container>
-                <Button variant="light" type="button" size="sm" onClick={handleFormInput}>Comment</Button>
+                <Button 
+                    variant="light" 
+                    type="button" 
+                    size="sm" 
+                    onClick={handleFormInput}
+                    >Comment</Button>
             </Container>
         </Form>
     )

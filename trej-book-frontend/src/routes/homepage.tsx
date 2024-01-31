@@ -21,7 +21,7 @@ export default function Homepage() {
         <>
                 {currentUser.loggedIn
                 ?
-                <Row style={{height: "100vh"}}>
+                <Row style={{height: "100%", display: 'flex'}}>
                     <Col xs={4} className="bg-secondary p-0" style={{maxWidth:"256px"}}>
                         <Sidebar />
                     </Col>

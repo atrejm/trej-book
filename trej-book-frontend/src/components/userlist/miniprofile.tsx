@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { Card, Col, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { IUser } from "../../App";
+import { MISSING_PROFILE_PIC_ALTERNATIVE } from "../../config";
 
 export default function MiniProfile({user}: {user: IUser}) {
     const [profilePic, setProfilePic] = useState<string>()
 
     useEffect(() => {
         if(!user?.profile?.profilePicURL)
-            setProfilePic("../../public/chuck.jpg")
+            setProfilePic(MISSING_PROFILE_PIC_ALTERNATIVE)
         else
             setProfilePic(user.profile.profilePicURL)
     },[])
@@ -19,7 +20,7 @@ export default function MiniProfile({user}: {user: IUser}) {
         <Card style={{width: '60%'}}>
             <Row>
                 <Col xs={2}>
-                    <Image src={profilePic} alt="no-pfp" rounded />
+                    <Image src={profilePic} alt="no-pfp" rounded style={{maxHeight:"100px"}}/>
                 </Col>
                 <Col xs={6}>
                     <h3>{user.firstname}</h3>

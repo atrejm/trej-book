@@ -7,6 +7,7 @@ import NewPostForm from "../forms/newPostForm";
 import { ProfileID } from "../../routes/profile";
 import { addFriend, getFullyHydratedUserData } from "../../helpers/request";
 import { UserContext } from '../../App';
+import { MISSING_PROFILE_PIC_ALTERNATIVE } from "../../config";
 
 export interface IProfile {
     _id: ProfileID
@@ -49,7 +50,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
 
             let picURL;
             if(!resJSON.profilePicURL)
-                picURL = "../../public/chuck.jpg"
+                picURL = MISSING_PROFILE_PIC_ALTERNATIVE
             else   
                 picURL = resJSON.profilePicURL+"?s=200"
 
@@ -131,7 +132,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                             :<></>}
                         </div>
                     </Col>
-                    <Col className="bg-secondary" style={{border:"solid black 1px", height:"100vh"}}>
+                    <Col className="bg-secondary" style={{border:"solid black 1px", height:"100vh", width:"100%"}}>
                         {owner ? 
                             <div >
                                 <Accordion>
