@@ -5,13 +5,16 @@
   "scripts": {
     "build": "npx tsc",
     "start": "ts-node ./bin/www",
-    "start-dev": "nodemon ./bin/www"
+    "start-dev": "nodemon ./bin/www",
+    "init-claudia": "claudia generate-serverless-express-proxy --express-module dist/src/app"
   },
   "dependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/passport": "^1.0.16",
     "@types/passport-jwt": "^4.0.0",
+    "aws-serverless-express": "^3.4.0",
     "bcryptjs": "^2.4.3",
+    "claudia-api-builder": "^4.1.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -22,6 +25,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^9.0.2",
+    "lambda": "^0.10.3",
     "mongoose": "^8.0.4",
     "morgan": "~1.9.1",
     "passport": "^0.7.0",

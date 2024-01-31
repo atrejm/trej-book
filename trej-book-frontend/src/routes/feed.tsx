@@ -4,7 +4,7 @@ import { getFeed } from "../helpers/request";
 import Post, { IPost } from "../components/profile/post";
 
 export default function Feed() {
-    const { currentUser, setCurrentUser } = useContext(UserContext);
+    const { currentUser } = useContext(UserContext);
     const [posts, setPosts] = useState<IPost[]>([]);
 
     useEffect(() => {

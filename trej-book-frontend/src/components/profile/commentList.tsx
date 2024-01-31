@@ -31,7 +31,7 @@ export default function CommentList({postID, comments, setComments} : IProps)  {
     return (
         <>
             {comments?.map((comment) => (
-                <div>
+                <div key={comment._id}>
                     <h6>{comment.content}</h6>
                     <small>
                         by: <span>

@@ -29,11 +29,14 @@ export default function CommentForm({post, comments, setComments}:IProps) {
     const handleFormInput = async () => {
         if(!setComments)
             return;
+        if(!comment)
+            return;
 
         const commentPayload = {
             content: comment ? comment : "",
             author: currentUser,
         }
+        console.log(commentPayload);
         const url = sessionStorage.getItem("API_URL") + `comments/${post._id}`;
         const response = await leaveComment(url, currentUser.jwToken, commentPayload);
         if(response.error)
@@ -47,7 +50,7 @@ export default function CommentForm({post, comments, setComments}:IProps) {
         <Form>
             <Form.Group className="mb-3">
                 <Form.Label>Leave a Comment</Form.Label>
-                <Form.Control type="text" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
+                <Form.Control type="text" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)}/>
             </Form.Group>
             <Container>
                 <Button variant="light" type="button" size="sm" onClick={handleFormInput}>Comment</Button>

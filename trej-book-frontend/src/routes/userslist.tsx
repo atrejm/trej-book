@@ -5,7 +5,7 @@ import MiniProfile from "../components/userlist/miniprofile"
 
 export default function UsersList() {
     const [allUsers, setAllUsers] = useState<Array<IUser>>()
-    const {currentUser, setCurrentUser} = useContext(UserContext)
+    const {currentUser} = useContext(UserContext)
 
     useEffect(() => {
         console.log("getting users");
