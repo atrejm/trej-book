@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import formatDate from "../../helpers/formatDate";
-import { UserID } from "../../App";
+import { IUser } from "../../App";
 import { Button } from "react-bootstrap";
 import { deletePost, getCommentsByPostID } from "../../helpers/request";
 import { UserContext } from "../../App";
@@ -11,7 +11,7 @@ export type PostID = string
 
 export interface IPost {
   _id: PostID;
-  author: UserID;
+  author: IUser;
   title: string;
   content: string;
   dateposted: string;
@@ -60,7 +60,7 @@ export default function Post({
 
   return (
     <>
-      <h1>
+      <h2>
         {post.title}
         {owner ? (
           <Button
@@ -73,7 +73,7 @@ export default function Post({
         ) : (
           <></>
         )}
-      </h1>
+      </h2>
       <h5>{post.content}</h5>
       <p>{formatDate(post.dateposted)}</p>
       <div className="container card py-2">

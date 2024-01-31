@@ -17,7 +17,8 @@ exports.getFeed = asyncHandler(async (req: Request, res: Response, next: NextFun
     const posts = await PostModel
         .find({author:{$in: [...friends, new ObjectId(req.params.userid)]}})
         .sort({dateposted: 'descending'})
-        .limit(20);
+        .limit(20)
+        .populate('author');
 
     res.json(posts)
 })
