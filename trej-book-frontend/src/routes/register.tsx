@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { createUser } from "../helpers/request";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +56,7 @@ export default function Register() {
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Last Name</Form.Label>
-                            <Form.Control type="text" placeholder="Confirm lastname" onChange={(e) => setLastname(e.target.value)} />
+                            <Form.Control type="text" placeholder="Enter lastname" onChange={(e) => setLastname(e.target.value)} />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -65,7 +65,9 @@ export default function Register() {
                     <Form.Control type="username" placeholder="Enter username" onChange={(e) => setUsername(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" >
-                    <Form.Label>email</Form.Label>
+                    <Form.Label>
+                        email <Badge bg="secondary">emails associated with <a href="https://www.gravatar.com" target="_blank">gravatar</a> automatically import a profile pic</Badge>
+                    </Form.Label> 
                     <Form.Control type="email" placeholder="email@" onChange={(e) => setEmail(e.target.value)} />
                 </Form.Group>
                 <Row>

@@ -21,7 +21,11 @@ export default function Feed() {
 
     return(
         <div className="container">
-            <h1 className="text-center">Feed</h1>
+            <div className="text-center">
+                <h1>Feed</h1>
+                <h4>This page shows what all of your friends have been up to recently</h4>
+            </div>
+            
             <hr className="my-4"></hr>
             {posts?
                 posts.map((post) => (

@@ -134,15 +134,13 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                     </Col>
                     <Col className="bg-secondary" style={{border:"solid black 1px", height:"100vh", width:"100%"}}>
                         {owner ? 
-                            <div >
+                            <div>
+                                <h1 className="display">Your Profile</h1>
                                 <Accordion>
                                     <Accordion.Header>
-                                        <span 
-                                            style={{color:"lightcyan", textDecoration: "underline", textShadow: "lightcyan 1px 0 2px"}}>
-                                                Create new post
-                                        </span>
+                                        Create New Post
                                     </Accordion.Header>
-                                    <Accordion.Body className="bg-secondary">
+                                    <Accordion.Body className="bg-dark">
                                         <NewPostForm posts={posts} setPosts={setPosts} />
                                     </Accordion.Body>
                                 </Accordion>
@@ -153,7 +151,7 @@ export default function ProfileBody({ profileID }: { profileID: ProfileID | unde
                         <h1>Posts</h1>
                         <hr className="mb-4"></hr>
                         <Container fluid className="bg-dark" >
-                            {posts.map((post) => <Post 
+                            {posts.map((post) => <Post
                                             key={post._id} 
                                             post={post} 
                                             posts={posts} 

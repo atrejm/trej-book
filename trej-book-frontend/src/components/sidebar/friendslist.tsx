@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
+import { Button, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { IUser } from "../../App";
 import { UserContext } from '../../App';
@@ -39,7 +39,9 @@ export default function Friends() {
                     </LinkContainer>
                 ))}
             </ListGroup>
-            <Link to={"usersList"} className="text-center link-tertiary mb-2">Find Friends</Link>
+            <Link to={"usersList"} className="text-center link-tertiary my-3">
+                <Button className="btn-dark">Find Friends</Button>
+            </Link>
             </div>
         </>
         

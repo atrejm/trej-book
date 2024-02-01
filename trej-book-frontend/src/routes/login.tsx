@@ -1,4 +1,4 @@
-import { FormEventHandler, useContext, useState } from "react";
+import { FormEventHandler, MouseEventHandler, useContext, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import Form from 'react-bootstrap/Form'
 import { LinkContainer } from "react-router-bootstrap";
@@ -20,6 +20,7 @@ export default function Login() {
         e.preventDefault();
         const url: string | null = sessionStorage.getItem("API_URL") + "users/login";
 
+
         const response = await login(url, currentUser?.jwToken, {username, password})
         
         console.log(response);
@@ -40,6 +41,30 @@ export default function Login() {
         }
     }
     
+    const handleSampleLogin: MouseEventHandler<HTMLButtonElement> = async () => {
+        const url: string | null = sessionStorage.getItem("API_URL") + "users/login";
+
+
+        const response = await login(url, currentUser?.jwToken, {username: "sampleuser", password: "sample"})
+        
+        console.log(response);
+
+        if (response.error) {
+            setFieldErrors(response.error);
+        } else if (response.user && response.token) {
+            // User authenticated
+            console.log("logging in and writing: ", response)
+            const user = response.user;
+            
+            user.jwToken = response.token;
+            user.loggedIn = true;
+            setCurrentUser(user);
+            sessionStorage.setItem("token", JSON.stringify(user.jwToken));
+            sessionStorage.setItem("user", JSON.stringify(user));
+            navigate('../home');
+        }
+    }
+
     return (
         <Container className="text-center" style={{maxWidth: '30vw'}}>
             <Form onSubmit={handleLogin}>
@@ -65,7 +90,7 @@ export default function Login() {
             </LinkContainer>
             <small> or </small>
             <LinkContainer to={'../home'}>
-                <Button variant="info" size="sm">Log in as sample account</Button>
+                <Button variant="info" size="sm" onClick={handleSampleLogin}>Log in as sample account</Button>
             </LinkContainer>
         </Container>
     )
