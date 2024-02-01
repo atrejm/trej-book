@@ -200,7 +200,7 @@ interface CommentResponse {
   postID: PostID,
   comment: IComment,
   updatedComments: Array<IComment>
-  error?: string
+  errors?: string[]
 }
 
 export async function leaveComment(

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { IUser, UserContext } from "../../App";
+import { ExpressValidationErrorResponse, IUser, UserContext } from "../../App";
 import { IPost } from "../profile/post";
 import { leaveComment } from "../../helpers/request";
 
@@ -24,12 +24,13 @@ interface IProps {
 export default function CommentForm({post, comments, setComments}:IProps) {
 
     const { currentUser } = useContext(UserContext);
-    const [comment, setComment] = useState<string>();
+    const [comment, setComment] = useState<string>("");
+    const [errors, setErrors] = useState<ExpressValidationErrorResponse[]>([]);
     
     const handleFormInput = async () => {
         if(!setComments)
             return;
-        if(!comment)
+        if(comment === "")
             return;
 
         const commentPayload = {
@@ -39,10 +40,15 @@ export default function CommentForm({post, comments, setComments}:IProps) {
         console.log(commentPayload);
         const url = sessionStorage.getItem("API_URL") + `comments/${post._id}`;
         const response = await leaveComment(url, currentUser.jwToken, commentPayload);
-        if(response.error)
-            console.error(response.error)
+        if(response.errors) {
+            console.error("Error leaving comment: ", response.errors)
+            setErrors(response.errors);
+            return;
+        }
+        console.log(response.comment)
         setComments([...comments, response.comment]);
         setComment("");
+        setErrors([]);
         console.log(response);
     }  
 
@@ -52,6 +58,9 @@ export default function CommentForm({post, comments, setComments}:IProps) {
                 <Form.Label>Leave a Comment</Form.Label>
                 <Form.Control type="text" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)}/>
             </Form.Group>
+            {errors.map((error) => (<p
+                key={error.path}
+                className="text-danger">{error.msg}</p>))}
             <Container>
                 <Button 
                     variant="light" 
