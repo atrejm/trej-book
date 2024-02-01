@@ -200,7 +200,7 @@ interface CommentResponse {
   postID: PostID,
   comment: IComment,
   updatedComments: Array<IComment>
-  errors?: string[]
+  errors?: ExpressValidationErrorResponse[]
 }
 
 export async function leaveComment(
